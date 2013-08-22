@@ -45,7 +45,7 @@ def status():
 
 
 @task
-def start():
+def start(prefix=[]):
     """Start the Gunicorn process"""
 
     set_env_defaults()
@@ -58,7 +58,6 @@ def start():
         abort(colors.red('env.gunicorn_wsgi_app not defined'))
 
     with cd(env.remote_workdir):
-        prefix = []
         if 'virtualenv_dir' in env:
             prefix.append('source %s/bin/activate' % env.virtualenv_dir)
         if 'django_settings_module' in env:
@@ -81,11 +80,13 @@ def start():
         options_string = ' '.join(options)
 
         if 'paster_config_file' in env:
-            run('%s gunicorn_paster %s %s' % (prefix_string, options_string,
-                                   env.paster_config_file))
+            run('%s gunicorn_paster %s %s' % (
+                prefix_string, options_string,
+                env.paster_config_file))
         else:
-            run('%s gunicorn %s %s' % (prefix_string, options_string,
-                                   env.gunicorn_wsgi_app))
+            run('%s gunicorn %s %s' % (
+                prefix_string, options_string,
+                env.gunicorn_wsgi_app))
 
         if gunicorn_running():
             puts(colors.green("Gunicorn started."))
