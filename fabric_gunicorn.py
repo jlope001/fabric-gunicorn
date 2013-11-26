@@ -72,7 +72,7 @@ def start(prefix=[]):
 
         # using config file
         if 'config' in env:
-            options.append('--config %s' % env.config_file)
+            options.append('--config %s' % env.config)
 
         # default settings
         else:
