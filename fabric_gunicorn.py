@@ -68,15 +68,25 @@ def start(prefix=[]):
         if len(prefix_string) > 0:
             prefix_string += ' && '
 
-        options = [
-            '--daemon',
-            '--pid %s' % env.gunicorn_pidpath,
-            '--bind %s' % env.gunicorn_bind,
-        ]
-        if 'gunicorn_workers' in env:
-            options.append('--workers %s' % env.gunicorn_workers)
-        if 'gunicorn_worker_class' in env:
-            options.append('--worker-class %s' % env.gunicorn_worker_class)
+        options = []
+
+        # using config file
+        if 'config' in env:
+            options.append('--config %s' % env.config_file)
+
+        # default settings
+        else:
+            options = [
+                '--daemon',
+                '--pid %s' % env.gunicorn_pidpath,
+                '--bind %s' % env.gunicorn_bind,
+            ]
+
+            if 'gunicorn_workers' in env:
+                options.append('--workers %s' % env.gunicorn_workers)
+            if 'gunicorn_worker_class' in env:
+                options.append('--worker-class %s' % env.gunicorn_worker_class)
+
         options_string = ' '.join(options)
 
         if 'paster_config_file' in env:
